@@ -9,6 +9,8 @@ spring:
     url: ENC(1JjULlW7yPo9u4OAYFz0TX958u4lkAGRjyOgA8J28Zx7J/DZAY6FbUpLAXZyKuudz1aKUvbLHc5HLl1w7tXqzw==)
     username: ENC(97LEGF/Ob7Wzj4dp3sTLSQ==)
     password: ENC(pLvcM6HCCj5eO7BxxZZKrRFMRKyBazVc)
+  redis:
+    host: ENC(g7NZ4El+KHpgYCk/Io35YGIbnL7z+2Ni)
 
 ---
 spring:
