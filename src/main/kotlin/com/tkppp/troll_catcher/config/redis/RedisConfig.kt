@@ -23,7 +23,7 @@ class RedisConfig {
     fun redisTemplate(): RedisTemplate<String, String> {
         val redisTemplate = RedisTemplate<String, String>()
         redisTemplate.setConnectionFactory(redisConnectionFactory())
-        
+
         redisTemplate.keySerializer = StringRedisSerializer()
         redisTemplate.valueSerializer = StringRedisSerializer()
 
