@@ -10,7 +10,7 @@ import org.springframework.web.client.RestTemplate
 @Configuration
 class HttpClientConfig {
 
-    @Value("\${riot.accessKey}")
+    @Value("\${riot.access-key}")
     private lateinit var accessKey: String
 
     @Bean
