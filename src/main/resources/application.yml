@@ -12,6 +12,9 @@ spring:
   redis:
     host: ENC(g7NZ4El+KHpgYCk/Io35YGIbnL7z+2Ni)
 
+riot:
+  access-key: RGAPI-97b74df3-80a8-4b48-921a-84cc40321a47
+
 ---
 spring:
   config:

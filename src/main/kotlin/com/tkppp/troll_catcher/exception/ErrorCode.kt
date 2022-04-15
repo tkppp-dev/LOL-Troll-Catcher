@@ -9,6 +9,9 @@ enum class ErrorCode(
     // 400 Bad Request
     BAD_REQUEST(HttpStatus.BAD_REQUEST, "Bad Request"),
 
+    // 404 Not Found
+    SUMMONER_DOESNT_EXIST(HttpStatus.NOT_FOUND, "존재하지 않는 소환사 이름입니다"),
+
     // 500 Internal Server Error
     INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "요청 처리중 예상치 못한 에러가 발생했습니다")
 }

@@ -20,7 +20,7 @@ class GlobalControllerExceptionHandler {
         return ResponseEntity(ErrorResponseDto(statusCode, errorMsg), statusCode)
     }
 
-    @ExceptionHandler(value = [Exception::class])
+    @ExceptionHandler(value = [RuntimeException::class])
     fun handlingUnexpectedException(ex: Exception): ResponseEntity<ErrorResponseDto> {
         val errorCode = ErrorCode.INTERNAL_SERVER_ERROR
         logger.error("${ex.message}", ex)
