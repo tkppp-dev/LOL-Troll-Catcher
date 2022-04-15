@@ -2,14 +2,12 @@ package com.tkppp.troll_catcher.summoner.service
 
 import com.tkppp.troll_catcher.exception.CustomException
 import com.tkppp.troll_catcher.exception.ErrorCode
+import com.tkppp.troll_catcher.summoner.domain.Summoner
 import com.tkppp.troll_catcher.summoner.domain.SummonerRepository
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.*
 
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.DisplayName
-import org.junit.jupiter.api.Nested
-import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 
@@ -20,8 +18,16 @@ internal class SummonerServiceTest(
 ) {
 
     @Nested
+    @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @DisplayName("소환사 정보 서비스 통합 테스트")
-    inner class SummonerInfo(){
+    inner class SummonerInfo {
+
+        private lateinit var newSummoner: Summoner
+
+        @AfterAll
+        fun clearRepository() {
+            summonerRepository.delete(newSummoner)
+        }
 
         @Test
         @DisplayName("DB에 존재하지 않지만 존재하는 소환사 이름을 받을 경우 DB에 소환사 정보를 저장하고 puuid 를 반환한다")
@@ -33,9 +39,9 @@ internal class SummonerServiceTest(
             val result = summonerService.getSummonerInfo(summonerName)
 
             // then
-            val summoner = summonerRepository.findByName(summonerName)
-            assertThat(result).isEqualTo(summoner!!.puuid)
-            assertThat(summonerName).isEqualTo(summoner.name)
+            newSummoner = summonerRepository.findByName(summonerName)!!
+            assertThat(result).isEqualTo(newSummoner.puuid)
+            assertThat(summonerName).isEqualTo(newSummoner.name)
         }
 
         @Test
