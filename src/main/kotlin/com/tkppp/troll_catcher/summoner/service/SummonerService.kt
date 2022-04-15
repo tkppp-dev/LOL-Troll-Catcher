@@ -39,12 +39,23 @@ class SummonerService(
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun getMatchDataList(puuid: String): List<String> =
+    fun getMatchIdList(puuid: String): List<String> =
         try {
             val param = "type=ranked&start=0&count=20"
             val uri = "$asiaBaseUri/match/v5/matches/by-puuid/${puuid}/ids?$param"
             restTemplate.exchange(uri, HttpMethod.GET, httpEntity, List::class.java).body!! as List<String>
         } catch (ex: Exception) {
-            throw CustomException(ErrorCode.MATCH_DATA_NOT_FOUND)
+            throw CustomException(ErrorCode.GET_MATCH_ID_LIST_FAIL)
         }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getMatchDataList(matchIdList: List<String>, recentMatchId: String): List<HashMap<String, *>> =
+        matchIdList.asSequence().filter { it > recentMatchId }.map {
+            try {
+                val uri = "$asiaBaseUri/match/v5/matches/$it"
+                restTemplate.exchange(uri, HttpMethod.GET, httpEntity, HashMap::class.java).body!! as HashMap<String, *>
+            } catch (ex: Exception) {
+                throw CustomException(ErrorCode.GET_MATCH_DATA_FAIL)
+            }
+        }.toList()
 }

@@ -19,7 +19,7 @@ internal class SummonerServiceTest(
     @Nested
     @TestInstance(TestInstance.Lifecycle.PER_CLASS)
     @DisplayName("소환사 정보 받아오기 서비스 통합 테스트")
-    inner class SummonerInfo {
+    inner class SummonerInfoTest {
 
         private lateinit var newSummoner: Summoner
 
@@ -77,20 +77,22 @@ internal class SummonerServiceTest(
 
     @Nested
     @DisplayName("매치 ID 리스트 받아오기 서비스 통합 테스트")
-    inner class SummonerMatchList {
+    inner class SummonerMatchIdListTest {
 
         @Test
-        @DisplayName("puuid 를 받아 해당 소환사의 매치 데이터 ID 리스트를 받아온다")
+        @DisplayName("puuid 를 받아 해당 소환사의 매치 ID 리스트를 받아온다")
         fun getMatchDataList_shouldReturnMatchList(){
             // given
             val puuid = "ilAGh19BQqkCL2EhgK6609131BNNuF-fSV4lD441hGtpkoVv8DyGwK3qsrzjiCSw6O1Jd8alKPGdaA"
 
             // when
-            val result = summonerService.getMatchDataList(puuid)
+            val result = summonerService.getMatchIdList(puuid)
 
             // then
             assertThat(result).isInstanceOf(List::class.java)
             assertThat(result.size).isLessThanOrEqualTo(30)
+
+            println(result)
         }
 
         @Test
@@ -100,11 +102,47 @@ internal class SummonerServiceTest(
             val puuid = "sdfasdfsfasf"
 
             // when
-            val result = assertThrows<CustomException> { summonerService.getMatchDataList(puuid) }
+            val result = assertThrows<CustomException> { summonerService.getMatchIdList(puuid) }
 
             // then
             assertThat(result).isInstanceOf(CustomException::class.java)
-            assertThat(result.error).isEqualTo(ErrorCode.MATCH_DATA_NOT_FOUND)
+            assertThat(result.error).isEqualTo(ErrorCode.GET_MATCH_ID_LIST_FAIL)
+        }
+    }
+
+    @Nested
+    @DisplayName("매치 데이터 받아오기 서비스 통합 테스트")
+    inner class SummonerMatchDataTest {
+
+        @Test
+        @DisplayName("매치 Id 리스트와 가장 최근 조회했던 매치 Id를 받아 매치 데이터를 받아온다")
+        fun getMatchDataList_shouldReturnMatchDataList() {
+            // given
+            val matchList = "KR_5864016614, KR_5863771894, KR_5863770401, KR_5862042714, KR_5861937125, KR_5861941335, KR_5861904421, KR_5861769917, KR_5860884087, KR_5860819198, KR_5860744843, KR_5855890726, KR_5855835385, KR_5855116233, KR_5855094651, KR_5855092139, KR_5855078411, KR_5855005233, KR_5854615038, KR_5854670236"
+                .split(',').map { it.trim() }
+            val recentMatchId = "KR_5855094651"
+
+            // when
+            val result = summonerService.getMatchDataList(matchList, recentMatchId)
+
+            // given
+            assertThat(result).isInstanceOf(List::class.java)
+            assertThat(result[0]).isInstanceOf(HashMap::class.java)
+            assertThat(result.size).isEqualTo(14)
+        }
+
+        @Test
+        @DisplayName("잘못된 매치 Id 리스트를 받을 경우 CustomException 을 던진다")
+        fun getMatchDataList_shouldThrowException() {
+            // given
+            val matchList = listOf("invalid1", "invalid2")
+            val recentMatchId = "invalid0"
+
+            // when
+            val result = assertThrows<CustomException> {  summonerService.getMatchDataList(matchList, recentMatchId) }
+
+            // given
+            assertThat(result.error).isEqualTo(ErrorCode.GET_MATCH_DATA_FAIL)
         }
     }
 }
