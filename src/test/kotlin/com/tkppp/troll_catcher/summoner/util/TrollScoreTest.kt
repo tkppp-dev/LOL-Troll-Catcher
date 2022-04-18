@@ -11,7 +11,7 @@ internal class TrollScoreTest {
         val results = mutableListOf<TrollScore>()
         for (death in 20 downTo 1) {
             for (kill in 0..death / 2) {
-                for (assist in 0..death / 2) {
+                for (assist in 0 until death ) {
                     results.add(TrollScore(kill, death, assist))
                 }
             }
