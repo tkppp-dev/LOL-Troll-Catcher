@@ -145,4 +145,9 @@ internal class SummonerServiceTest(
             assertThat(result.error).isEqualTo(ErrorCode.GET_MATCH_DATA_FAIL)
         }
     }
+
+    @Test
+    fun getResult(){
+        summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
+    }
 }

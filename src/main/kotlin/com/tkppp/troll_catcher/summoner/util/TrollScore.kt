@@ -63,13 +63,13 @@ data class TrollScore(
     private fun getTrollScoreFromAssistWhenDeathMoreThan4(): Int =
         when (assist) {
             0 -> 15
-            1 -> 14
-            2 -> 12
-            3 -> 10
-            4 -> 8
-            5 -> 6
-            6 -> 4
-            7 -> 2
+            1 -> 10
+            2 -> 7
+            3 -> 5
+            4 -> 4
+            5 -> 3
+            6 -> 2
+            7 -> 1
             else -> 0
         }
 
