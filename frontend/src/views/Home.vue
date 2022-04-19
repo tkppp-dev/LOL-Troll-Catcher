@@ -56,7 +56,7 @@ export default {
   margin: 200px 0px 0px 0px;
   width: 960px;
 }
-h1 {
+.home-content-wrapper > h1 {
   margin-bottom: 10px;
 }
 
