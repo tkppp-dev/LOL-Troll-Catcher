@@ -60,6 +60,12 @@ export default {
   margin-bottom: 10px;
 }
 
+@media (max-width: 960px){
+  .home-content-wrapper{
+    width: 98%
+  }
+}
+
 .home-search-bar {
   box-sizing: border-box;
   margin: 30px 0px;

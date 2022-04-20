@@ -37,4 +37,10 @@ export default {
   font-weight: bold;
   font-size: 21px;
 }
+
+@media (max-width: 960px) {
+  .nav-content {
+    width: 98%
+  }
+}
 </style>

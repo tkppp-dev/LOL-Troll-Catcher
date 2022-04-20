@@ -21,5 +21,6 @@ export default {
 
   background-color: rgb(45,47,56);
   color: white;
+  font-size: 15px;
 }
 </style>
