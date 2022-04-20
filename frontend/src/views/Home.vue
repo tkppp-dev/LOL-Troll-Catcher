@@ -3,18 +3,7 @@
   <div class="home-content-container">
     <div class="home-content-wrapper">
       <h1>LOL 트롤 캐쳐</h1>
-      <div class="home-search-bar-wrapper">
-        <input
-          type="text"
-          class="home-search-bar"
-          v-model="summonerName"
-          placeholder="소환사 이름 검색"
-          spellcheck="false"
-          autocapitalize="none"
-          @keyup.enter="goToSearchResultPage"
-        />
-        <img class="home-search-icon" src="../assets/search-icon.png" @click="goToSearchResultPage">
-      </div>
+      <searchbar :isHome="true" />
       <p>
         본 페이지는 게임에 열의가 없는, 맘대로 잘 풀리지 않으면 일방적으로
         달리고 던지는 소환사를 사전에 파악하기 위한 목적으로 제작되었습니다.
@@ -25,20 +14,12 @@
 
 <script>
 import Navbar from '../components/Navbar.vue';
+import Searchbar from '../components/Searchbar.vue';
 export default {
   components: {
     Navbar,
+    Searchbar,
   },
-  data(){
-    return {
-      summonerName: ''
-    }
-  },
-  methods: {
-    goToSearchResultPage() {
-      this.$router.push(`/search/single?summoner=${this.summonerName}`)
-    }
-  }
 };
 </script>
 
@@ -64,34 +45,5 @@ export default {
   .home-content-wrapper{
     width: 98%
   }
-}
-
-.home-search-bar {
-  box-sizing: border-box;
-  margin: 30px 0px;
-  width: 500px;
-  height: 50px;
-  padding: 0px 40px 0px 16px;
-
-  border: none;
-  font-size: 15px;
-}
-
-.home-search-bar:focus {
-  outline: none;
-}
-
-.home-search-bar-wrapper {
-  position: relative;
-}
-
-.home-search-icon {
-  position: absolute;
-  top: 43px;
-  right: 8px;
-}
-
-.home-search-icon:hover {
-  cursor: pointer;
 }
 </style>

@@ -4,13 +4,27 @@
       <span class="nav-title">
         LOL 트롤 캐쳐
       </span>
+      <div class="nav-search-bar-wrapper">
+        <searchbar v-if="navSearchbarVisible" :isNavbar="true"/>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Searchbar from './Searchbar.vue'
 export default {
-
+  components: { Searchbar },
+  data(){
+    return {
+      navSearchbarVisible: true
+    }
+  },
+  created(){
+    if(this.$route.path === '/'){
+      this.navSearchbarVisible = false
+    }
+  }
 }
 </script>
 
@@ -36,6 +50,20 @@ export default {
   color: white;
   font-weight: bold;
   font-size: 21px;
+}
+
+.nav-search-bar-wrapper {
+  display: flex;
+  flex: 1;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.nav-search-bar {
+  box-sizing: border-box;
+  width: 250px;
+  height: 30px;
+  padding: 12px;
 }
 
 @media (max-width: 960px) {
