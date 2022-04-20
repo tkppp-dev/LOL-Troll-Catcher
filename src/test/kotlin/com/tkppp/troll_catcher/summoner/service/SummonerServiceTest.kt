@@ -114,6 +114,9 @@ internal class SummonerServiceTest(
     @DisplayName("매치 데이터 받아오기 서비스 통합 테스트")
     inner class SummonerMatchDataTest {
 
+        private val puuid = "ilAGh19BQqkCL2EhgK6609131BNNuF-fSV4lD441hGtpkoVv8DyGwK3qsrzjiCSw6O1Jd8alKPGdaA"
+
+
         @Test
         @DisplayName("매치 Id 리스트와 가장 최근 조회했던 매치 Id를 받아 매치 데이터를 받아온다")
         fun getMatchDataList_shouldReturnMatchDataList() {
@@ -123,7 +126,7 @@ internal class SummonerServiceTest(
             val recentMatchId = "KR_5855094651"
 
             // when
-            val result = summonerService.getMatchDataList(matchList, recentMatchId)
+            val result = summonerService.getMatchInfoList(matchList, recentMatchId, puuid)
 
             // given
             assertThat(result).isInstanceOf(List::class.java)
@@ -139,7 +142,7 @@ internal class SummonerServiceTest(
             val recentMatchId = "invalid0"
 
             // when
-            val result = assertThrows<CustomException> {  summonerService.getMatchDataList(matchList, recentMatchId) }
+            val result = assertThrows<CustomException> {  summonerService.getMatchInfoList(matchList, recentMatchId, puuid) }
 
             // given
             assertThat(result.error).isEqualTo(ErrorCode.GET_MATCH_DATA_FAIL)
@@ -148,6 +151,6 @@ internal class SummonerServiceTest(
 
     @Test
     fun getResult(){
-        summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
+        //summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
     }
 }
