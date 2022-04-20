@@ -1,5 +1,6 @@
 package com.tkppp.troll_catcher.summoner.domain
 
+import com.tkppp.troll_catcher.summoner.util.MatchInfo
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
@@ -13,8 +14,8 @@ class SummonerRepositoryTest(
 ) {
 
     @AfterEach
-    fun tearDown(){
-        summonerRepository.deleteAll()
+    fun tearDown() {
+        //summonerRepository.deleteAll()
     }
 
     @Test
@@ -24,9 +25,13 @@ class SummonerRepositoryTest(
         val puuid = "puuid"
         val name = "쳇바퀴 속 다람쥐"
         val recentMatchId = "match_id"
-        val analysisResult = listOf(1,4,5,6)
+        val matchInfos = listOf(
+            MatchInfo(
+                "KR_1234", 12, "asdf", 1, 2, 3, 40, 23, 33
+            )
+        )
         val summoner = Summoner(
-            puuid = puuid, name = name, recentMatchId = recentMatchId, analysisResults = analysisResult
+            puuid = puuid, name = name, recentMatchId = recentMatchId, matchInfos = matchInfos
         )
 
         // when
@@ -37,6 +42,6 @@ class SummonerRepositoryTest(
         assertThat(result.puuid).isEqualTo(puuid)
         assertThat(result.name).isEqualTo(name)
         assertThat(result.recentMatchId).isEqualTo(recentMatchId)
-        assertThat(result.analysisResults).isEqualTo(analysisResult)
+        assertThat(result.matchInfos).isEqualTo(matchInfos)
     }
 }
