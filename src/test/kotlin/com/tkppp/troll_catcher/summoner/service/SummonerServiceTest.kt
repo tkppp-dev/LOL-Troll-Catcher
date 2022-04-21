@@ -151,6 +151,6 @@ internal class SummonerServiceTest(
 
     @Test
     fun getResult(){
-        //summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
+        summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
     }
 }

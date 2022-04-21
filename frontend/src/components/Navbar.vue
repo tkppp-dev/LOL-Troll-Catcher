@@ -1,7 +1,7 @@
 <template>
   <div class="nav-container">
     <div class="nav-content">
-      <span class="nav-title">
+      <span class="nav-title" @click="goToHome">
         LOL 트롤 캐쳐
       </span>
       <div class="nav-search-bar-wrapper">
@@ -18,6 +18,11 @@ export default {
   data(){
     return {
       navSearchbarVisible: true
+    }
+  },
+  methods: {
+    goToHome(){
+      this.$router.push('/')
     }
   },
   created(){
@@ -40,8 +45,8 @@ export default {
 }
 
 .nav-content {
-  height: 56px;
   width: 960px;
+  padding: 12px 0px;
 
   display: flex;
   justify-content: flex-start;
@@ -52,6 +57,10 @@ export default {
   font-size: 21px;
 }
 
+.nav-title {
+  cursor: pointer;
+}
+
 .nav-search-bar-wrapper {
   display: flex;
   flex: 1;
@@ -59,16 +68,19 @@ export default {
   align-items: center;
 }
 
-.nav-search-bar {
-  box-sizing: border-box;
-  width: 250px;
-  height: 30px;
-  padding: 12px;
-}
-
 @media (max-width: 960px) {
   .nav-content {
-    width: 98%
+    width: 96%
+  }
+}
+
+@media (max-width: 383px){
+  .nav-content {
+    flex-direction: column;
+  }
+  .nav-search-bar-wrapper{
+    justify-content: center;
+    width: 100%;
   }
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <div class="search-bar-wrapper">
+  <div
+    class="search-bar-wrapper"
+    :class="{ 'home-search-bar-wrapper': isHome, 'nav-search-bar-wrapper': isNavbar }"
+  >
     <input
       type="text"
       class="search-bar"
@@ -39,7 +42,11 @@ export default {
   },
   methods: {
     goToSearchResultPage() {
-      this.$router.push(`/search/single?summoner=${this.summonerName}`);
+      if(this.summonerName.length < 2){
+        alert('소환사 이름은 두글자 이상이어야 합니다')
+      } else {
+        this.$router.push(`/search/single?summoner=${this.summonerName}`);
+      }
     },
   },
 };
@@ -68,6 +75,28 @@ export default {
   font-size: 14px;
 }
 
+@media (max-width: 540px) {
+  .home-search-bar-wrapper {
+    display: flex;
+    width: 80%;
+  }
+}
+
+@media (max-width: 383px) {
+  .nav-search-bar-wrapper {
+    display: flex;
+    width: 80%;
+  }
+  .nav-search-bar {
+    width: auto;
+    flex: 1;
+    margin-top: 12px;
+  }
+  .nav-search-icon {
+    margin-top: 12px;
+  }
+}
+
 .search-bar:focus {
   outline: none;
 }
@@ -88,7 +117,7 @@ export default {
 .nav-search-icon {
   width: 20px;
   right: 5px;
-  top: 6px;
+  top: 5px;
 }
 
 .search-icon:hover {
