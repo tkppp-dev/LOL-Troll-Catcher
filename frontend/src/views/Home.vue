@@ -43,7 +43,7 @@ export default {
 
 @media (max-width: 960px){
   .home-content-wrapper{
-    width: 98%
+    width: 96%
   }
 }
 </style>
