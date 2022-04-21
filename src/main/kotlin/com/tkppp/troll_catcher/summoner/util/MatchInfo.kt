@@ -4,6 +4,7 @@ data class MatchInfo(
     val matchId: String,
     val duration: Int,
     val champion: String,
+    val position: String,
     val summonerSpell1Id: Int,
     val summonerSpell2Id : Int,
     val kills: Int,

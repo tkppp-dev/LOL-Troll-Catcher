@@ -27,7 +27,7 @@ class SummonerRepositoryTest(
         val recentMatchId = "match_id"
         val matchInfos = listOf(
             MatchInfo(
-                "KR_1234", 12, "asdf", 1, 2, 3, 40, 23, 33
+                "KR_1234", 12, "asdf", "UTILITY",1, 2, 3, 40, 23, 33
             )
         )
         val summoner = Summoner(

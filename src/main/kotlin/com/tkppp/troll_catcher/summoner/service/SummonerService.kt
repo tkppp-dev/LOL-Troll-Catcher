@@ -24,7 +24,6 @@ class SummonerService(
     private val krBaseUri = "https://kr.api.riotgames.com/lol"
     private val asiaBaseUri = "https://asia.api.riotgames.com/lol"
 
-
     fun getSingleSearchResult(summonerName: String): List<SingleSearchResponseDto> {
         var summoner = getSummonerInfo(summonerName)
         val puuid = summoner.puuid
@@ -88,8 +87,9 @@ class SummonerService(
                 val personalData = personalDataList.groupBy { it["puuid"] }[puuid]!![0]
                 val matchInfo = MatchInfo(
                     matchId = matchId,
-                    duration = personalData["gameDuration"] as Int,
+                    duration = info["gameDuration"] as Int,
                     champion = personalData["championName"] as String,
+                    position = personalData["teamPosition"] as String,
                     summonerSpell1Id = personalData["summoner1Id"] as Int,
                     summonerSpell2Id = personalData["summoner2Id"] as Int,
                     kills = personalData["kills"] as Int,
