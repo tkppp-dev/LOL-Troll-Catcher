@@ -2,6 +2,7 @@ package com.tkppp.troll_catcher.summoner.util
 
 data class MatchInfo(
     val matchId: String,
+    val matchResult: Boolean,
     val duration: Int,
     val champion: String,
     val position: String,

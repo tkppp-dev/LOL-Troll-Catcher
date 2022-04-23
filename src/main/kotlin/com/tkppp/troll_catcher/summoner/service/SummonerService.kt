@@ -87,6 +87,7 @@ class SummonerService(
                 val personalData = personalDataList.groupBy { it["puuid"] }[puuid]!![0]
                 val matchInfo = MatchInfo(
                     matchId = matchId,
+                    matchResult = personalData["win"] as Boolean,
                     duration = info["gameDuration"] as Int,
                     champion = personalData["championName"] as String,
                     position = personalData["teamPosition"] as String,
