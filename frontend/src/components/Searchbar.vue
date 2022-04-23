@@ -41,11 +41,11 @@ export default {
     };
   },
   methods: {
-    goToSearchResultPage() {
+    async goToSearchResultPage() {
       if(this.summonerName.length < 2){
         alert('소환사 이름은 두글자 이상이어야 합니다')
       } else {
-        this.$router.push(`/search/single?summoner=${this.summonerName}`);
+        await this.$router.push(`/search/single?summoner=${this.summonerName}`);
         this.$router.go();
       }
     },
