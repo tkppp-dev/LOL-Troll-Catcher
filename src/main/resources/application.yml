@@ -13,7 +13,7 @@ spring:
     host: ENC(g7NZ4El+KHpgYCk/Io35YGIbnL7z+2Ni)
 
 riot:
-  access-key: RGAPI-b4f86758-865a-487d-a08a-b2c28268f51c
+  access-key: RGAPI-a7a64eaf-b987-43b2-a7b7-2fd73149eb8f
 
 ---
 spring:
@@ -22,7 +22,7 @@ spring:
       on-profile: dev
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
 
 ---
