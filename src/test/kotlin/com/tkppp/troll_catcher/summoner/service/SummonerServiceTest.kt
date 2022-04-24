@@ -9,6 +9,8 @@ import org.junit.jupiter.api.*
 
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import kotlin.system.measureTimeMillis
+import kotlin.time.measureTime
 
 @SpringBootTest
 internal class SummonerServiceTest(
@@ -81,7 +83,7 @@ internal class SummonerServiceTest(
 
         @Test
         @DisplayName("puuid 를 받아 해당 소환사의 매치 ID 리스트를 받아온다")
-        fun getMatchDataList_shouldReturnMatchList(){
+        fun getMatchDataList_shouldReturnMatchList() {
             // given
             val puuid = "ilAGh19BQqkCL2EhgK6609131BNNuF-fSV4lD441hGtpkoVv8DyGwK3qsrzjiCSw6O1Jd8alKPGdaA"
 
@@ -97,7 +99,7 @@ internal class SummonerServiceTest(
 
         @Test
         @DisplayName("유효하지 않는 puuid 를 받으면 CustomException 을 던져야한다")
-        fun getMatchDataList_shouldThrowException(){
+        fun getMatchDataList_shouldThrowException() {
             // given
             val puuid = "sdfasdfsfasf"
 
@@ -121,8 +123,9 @@ internal class SummonerServiceTest(
         @DisplayName("매치 Id 리스트와 가장 최근 조회했던 매치 Id를 받아 매치 데이터를 받아온다")
         fun getMatchDataList_shouldReturnMatchDataList() {
             // given
-            val matchList = "KR_5864016614, KR_5863771894, KR_5863770401, KR_5862042714, KR_5861937125, KR_5861941335, KR_5861904421, KR_5861769917, KR_5860884087, KR_5860819198, KR_5860744843, KR_5855890726, KR_5855835385, KR_5855116233, KR_5855094651, KR_5855092139, KR_5855078411, KR_5855005233, KR_5854615038, KR_5854670236"
-                .split(',').map { it.trim() }
+            val matchList =
+                "KR_5864016614, KR_5863771894, KR_5863770401, KR_5862042714, KR_5861937125, KR_5861941335, KR_5861904421, KR_5861769917, KR_5860884087, KR_5860819198, KR_5860744843, KR_5855890726, KR_5855835385, KR_5855116233, KR_5855094651, KR_5855092139, KR_5855078411, KR_5855005233, KR_5854615038, KR_5854670236"
+                    .split(',').map { it.trim() }
             val recentMatchId = "KR_5855094651"
 
             // when
@@ -142,15 +145,36 @@ internal class SummonerServiceTest(
             val recentMatchId = "invalid0"
 
             // when
-            val result = assertThrows<CustomException> {  summonerService.getMatchInfoList(matchList, recentMatchId, puuid) }
+            val result =
+                assertThrows<CustomException> { summonerService.getMatchInfoList(matchList, recentMatchId, puuid) }
 
             // given
             assertThat(result.error).isEqualTo(ErrorCode.GET_MATCH_DATA_FAIL)
         }
     }
 
-    @Test
-    fun getResult(){
-        summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
+    @Nested
+    inner class BlockingNonBlockingIOTest {
+
+        @AfterEach
+        fun tearDown(){
+            summonerRepository.deleteAll()
+        }
+
+        @Test
+        fun getResult_Blocking() {
+            val time = measureTimeMillis {
+                summonerService.getSingleSearchResult("쳇바퀴 속 다람쥐")
+            }
+            println("Blocking - duration: $time")
+        }
+
+        @Test
+        fun getResult_NonBlocking(){
+            val time = measureTimeMillis {
+                summonerService.getSingleSearchResultNonBlocking("쳇바퀴 속 다람쥐")
+            }
+            println("NonBlocking - duration: $time")
+        }
     }
 }

@@ -8,11 +8,12 @@ import com.tkppp.troll_catcher.summoner.domain.SummonerRepository
 import com.tkppp.troll_catcher.summoner.util.MatchInfo
 import com.tkppp.troll_catcher.summoner.util.TrollPossibility.*
 import com.tkppp.troll_catcher.summoner.util.TrollScore
+import kotlinx.coroutines.*
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpMethod
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-import java.lang.Exception
 
 @Service
 class SummonerService(
@@ -30,6 +31,23 @@ class SummonerService(
 
         val matchIdList = getMatchIdList(puuid)
         val matchInfoList = getMatchInfoList(matchIdList, summoner.recentMatchId, puuid)
+        if (matchInfoList.isNotEmpty()) {
+            summoner.matchInfos = (matchInfoList + (summoner.matchInfos ?: listOf())).let {
+                if (it.size > 30) it.subList(0, 30) else it
+            }
+            summoner.recentMatchId = matchIdList.first()
+            summoner = summonerRepository.save(summoner)
+        }
+
+        return summoner.matchInfos?.map { SingleSearchResponseDto(it) } ?: listOf()
+    }
+
+    fun getSingleSearchResultNonBlocking(summonerName: String): List<SingleSearchResponseDto> {
+        var summoner = getSummonerInfo(summonerName)
+        val puuid = summoner.puuid
+
+        val matchIdList = getMatchIdList(puuid)
+        val matchInfoList = getMatchInfoListNonBlocking(matchIdList, summoner.recentMatchId, puuid)
         if (matchInfoList.isNotEmpty()) {
             summoner.matchInfos = (matchInfoList + (summoner.matchInfos ?: listOf())).let {
                 if (it.size > 30) it.subList(0, 30) else it
@@ -110,4 +128,66 @@ class SummonerService(
                 throw CustomException(ErrorCode.GET_MATCH_DATA_FAIL)
             }
         }.toList()
+
+    suspend fun getMatchInfo(uri: String): ResponseEntity<*> = withContext(Dispatchers.IO) {
+        try {
+            restTemplate.exchange(
+                uri,
+                HttpMethod.GET,
+                httpEntity,
+                HashMap::class.java
+            )
+        } catch (ex: Exception) {
+            when(ex.message?.let { it.split(" ")[0] }){
+                "429" -> {
+                    delay(1000L)
+                    getMatchInfo(uri)
+                }
+                else -> {
+                    ex.printStackTrace()
+                    throw CustomException(ErrorCode.GET_MATCH_DATA_FAIL)
+                }
+            }
+
+        }
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun getMatchInfoListNonBlocking(
+        matchIdList: List<String>,
+        recentMatchId: String?,
+        puuid: String
+    ): List<MatchInfo> = runBlocking {
+        val deferredArray = matchIdList.asSequence().filter { it > (recentMatchId ?: "KR_0") }.map { matchId ->
+            CoroutineScope(Dispatchers.IO).async {
+                val uri = "$asiaBaseUri/match/v5/matches/$matchId"
+                val body = getMatchInfo(uri).body!! as HashMap<String, *>
+                val info = body["info"] as HashMap<String, *>
+                val personalDataList = info["participants"] as List<HashMap<String, *>>
+                val personalData = personalDataList.groupBy { it["puuid"] }[puuid]!![0]
+                val matchInfo = MatchInfo(
+                    matchId = matchId,
+                    matchResult = personalData["win"] as Boolean,
+                    duration = info["gameDuration"] as Int,
+                    champion = personalData["championName"] as String,
+                    position = personalData["teamPosition"] as String,
+                    summonerSpell1Id = personalData["summoner1Id"] as Int,
+                    summonerSpell2Id = personalData["summoner2Id"] as Int,
+                    kills = personalData["kills"] as Int,
+                    deaths = personalData["deaths"] as Int,
+                    assists = personalData["assists"] as Int,
+                    creepScore = personalData["totalMinionsKilled"] as Int + personalData["neutralMinionsKilled"] as Int
+                )
+                matchInfo.trollPossibility =
+                    when (TrollScore(matchInfo.kills, matchInfo.deaths, matchInfo.assists).getTrollScore()) {
+                        in 0..20 -> NO_POSSIBILITY
+                        in 21..35 -> OPACITY
+                        in 36..50 -> HIGH
+                        else -> VERY_HIGH
+                    }
+                matchInfo
+            }
+        }.toList().toTypedArray()
+        awaitAll(*deferredArray)
+    }
 }
